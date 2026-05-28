@@ -1,0 +1,14 @@
+# Foundry
+cache/
+out/
+lib/
+
+# Environment
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Broadcast (deployment artifacts — optional to commit)
+broadcast/

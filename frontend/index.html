@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CertChain — Blockchain Certificate Verification</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="nav-brand">
+        <div class="brand-icon">
+          <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+            <circle cx="18" cy="18" r="17" stroke="#0891b2" stroke-width="2"/>
+            <path d="M11 18l4 4 10-10" stroke="#0891b2" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <span class="brand-name">CertChain</span>
+      </div>
+      <div class="nav-links">
+        <a href="#" class="nav-link active" onclick="switchTab('verify')">Home</a>
+        <a href="#" class="nav-link" onclick="switchTab('issue')">Issue</a>
+        <a href="#" class="nav-link" onclick="switchTab('revoke')">Revoke</a>
+        <a href="#" class="nav-link" onclick="switchTab('manage')">Issuers</a>
+        <a href="#" class="nav-link" onclick="switchTab('dashboard')">Dashboard</a>
+      </div>
+      <div class="nav-actions">
+        <span class="network-badge" id="networkBadge"></span>
+        <span class="role-badge" id="roleBadge"></span>
+        <button class="btn-connect" id="connectBtn" onclick="connectWallet()">
+          <span class="connect-dot" id="walletDot"></span>
+          <span id="walletLabel">Connect Wallet</span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- HERO SECTION (shown on verify tab) -->
+  <section class="hero" id="heroSection">
+    <div class="hero-content">
+      <h1>Search and <span class="text-teal">Verify</span><br/>Blockchain <span class="text-navy">Certificates</span></h1>
+      <p class="hero-subtitle">
+        The decentralized verification platform for accredited certificates.
+        Verify any certificate on Ethereum — instant, tamper-proof, and trustless.
+      </p>
+      <div class="search-bar">
+        <input type="text" id="verifyId" placeholder="Enter certificate ID or transaction hash" />
+        <button class="btn-search" onclick="verifyCertificate()">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+          Search
+        </button>
+      </div>
+      <div id="verifyResult"></div>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <section class="stats-bar">
+    <div class="stats-container">
+      <div class="stat-item">
+        <span class="stat-number" id="statTotalCerts">--</span>
+        <span class="stat-label">Certificates Issued</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-number" id="statIssuers">--</span>
+        <span class="stat-label">Contract Owner</span>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat-item">
+        <span class="stat-number text-teal">Ethereum</span>
+        <span class="stat-label">Blockchain Network</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT PANELS -->
+  <main class="main-content">
+
+    <!-- ISSUE PANEL -->
+    <div class="panel" id="panel-issue">
+      <div class="panel-card">
+        <div class="panel-header">
+          <h2>Issue a New Certificate</h2>
+          <p>Fill in the details below. Metadata is automatically uploaded to IPFS via Pinata.</p>
+        </div>
+
+        <!-- Pinata config -->
+        <div class="pinata-config" id="pinataConfig">
+          <div class="pinata-config-header" onclick="togglePinataConfig()">
+            <span>Pinata API Key</span>
+            <span id="pinataStatus" class="pinata-status"></span>
+            <svg id="pinataChevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </div>
+          <div class="pinata-config-body" id="pinataConfigBody">
+            <div class="form-group" style="margin:0">
+              <input type="password" id="pinataJwt" placeholder="Paste your Pinata JWT here..." />
+              <span class="form-hint">Get it from <strong>app.pinata.cloud → API Keys → New Key → Admin JWT</strong>. Saved locally in your browser.</span>
+            </div>
+            <button class="btn-outline" style="margin-top:10px" onclick="savePinataJwtFromUI()">Save Key</button>
+          </div>
+        </div>
+
+        <form onsubmit="event.preventDefault(); issueCertificate();" style="margin-top:20px">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="issueRecipient">Recipient Wallet Address</label>
+              <input type="text" id="issueRecipient" placeholder="0x..." required />
+            </div>
+            <div class="form-group">
+              <label for="issueRecipientName">Recipient Name</label>
+              <input type="text" id="issueRecipientName" placeholder="Full name of the recipient" required />
+            </div>
+            <div class="form-group full-width">
+              <label for="issueCourseName">Course / Achievement</label>
+              <input type="text" id="issueCourseName" placeholder="e.g. Blockchain Fundamentals" required />
+            </div>
+            <div class="form-group full-width">
+              <label for="issueDescription">Description <span style="font-weight:400;color:var(--gray-500)">(optional)</span></label>
+              <input type="text" id="issueDescription" placeholder="Brief description of the achievement" />
+            </div>
+            <div class="form-group full-width">
+              <label>IPFS CID</label>
+              <input type="text" id="issueIpfsHash" placeholder="Auto-generated after upload..." readonly style="background:var(--gray-50);cursor:not-allowed" />
+              <span class="form-hint">Automatically uploaded to Pinata when you click Issue Certificate.</span>
+            </div>
+          </div>
+          <button type="submit" class="btn-primary" id="issueBtn">Issue Certificate</button>
+        </form>
+        <div id="issueResult"></div>
+      </div>
+    </div>
+
+    <!-- REVOKE PANEL -->
+    <div class="panel" id="panel-revoke">
+      <div class="panel-card">
+        <div class="panel-header">
+          <h2>Revoke a Certificate</h2>
+          <p>Only authorized issuers can revoke certificates. This action is permanent on-chain.</p>
+        </div>
+        <div class="form-group">
+          <label for="revokeId">Certificate ID</label>
+          <input type="text" id="revokeId" placeholder="0x..." />
+        </div>
+        <button class="btn-danger" onclick="revokeCertificate()">Revoke Certificate</button>
+        <div id="revokeResult"></div>
+      </div>
+    </div>
+
+    <!-- MANAGE ISSUERS PANEL -->
+    <div class="panel" id="panel-manage">
+      <div class="panel-card">
+        <div class="panel-header">
+          <h2>Manage Issuers</h2>
+          <p>Contract owner can authorize or revoke issuer permissions.</p>
+        </div>
+        <div class="form-group">
+          <label for="issuerAddress">Issuer Address</label>
+          <input type="text" id="issuerAddress" placeholder="0x..." />
+        </div>
+        <div class="btn-group">
+          <button class="btn-primary" onclick="authorizeIssuer()">Authorize</button>
+          <button class="btn-danger" onclick="revokeIssuerAccess()">Revoke</button>
+        </div>
+        <hr class="divider" />
+        <div class="form-group">
+          <label for="checkIssuerAddress">Check Authorization Status</label>
+          <input type="text" id="checkIssuerAddress" placeholder="0x..." />
+        </div>
+        <button class="btn-outline" onclick="checkIssuer()">Check Status</button>
+        <div id="checkIssuerResult"></div>
+      </div>
+    </div>
+
+    <!-- DASHBOARD PANEL -->
+    <div class="panel" id="panel-dashboard">
+      <div class="panel-card">
+        <div class="panel-header">
+          <h2>Certificate Lookup</h2>
+          <p>Search all certificates issued to a specific wallet address.</p>
+        </div>
+        <div class="form-group">
+          <label for="dashRecipient">Recipient Address</label>
+          <input type="text" id="dashRecipient" placeholder="0x..." />
+        </div>
+        <button class="btn-primary" onclick="lookupRecipient()">Look Up</button>
+        <div id="dashResult"></div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-content">
+      <p>CertChain — Decentralized Certificate Verification on Ethereum</p>
+      <p class="footer-sub">Built with Solidity, Foundry, ethers.js</p>
+    </div>
+  </footer>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.4/ethers.umd.min.js"></script>
+  <script src="ipfs.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
