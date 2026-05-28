@@ -1,10 +1,4 @@
-/* ============================================================
-   app.js — CertChain Frontend Logic
-   Wallet connection, contract interaction, UI management
-   ============================================================ */
 
-
-// ---- Contract ABI ----
 const CONTRACT_ABI = [
   {"type":"constructor","inputs":[],"stateMutability":"nonpayable"},
   {"type":"function","name":"authorizeIssuer","inputs":[{"name":"_issuer","type":"address"}],"outputs":[],"stateMutability":"nonpayable"},
@@ -24,13 +18,12 @@ const CONTRACT_ABI = [
   {"type":"event","name":"IssuerRevoked","inputs":[{"name":"issuer","type":"address","indexed":true},{"name":"revokedBy","type":"address","indexed":true}]}
 ];
 
-// ---- Network Config ----
 const NETWORK_CONFIG = {
   31337:    { name: "Anvil (Local)", contractAddress: "", blockExplorer: "" },
   11155111: { name: "Sepolia",      contractAddress: "", blockExplorer: "https://sepolia.etherscan.io" }
 };
 
-// ---- App State ----
+
 let provider = null;
 let signer = null;
 let contract = null;
@@ -40,9 +33,7 @@ let blockExplorerUrl = "";
 let currentNetworkName = "";
 
 
-/* ============================================================
-   INITIALIZATION
-   ============================================================ */
+
 window.addEventListener("DOMContentLoaded", async () => {
   if (!window.ethereum) {
     showToast("MetaMask not detected. Serve this page via http://localhost (run: make serve)", "error");
@@ -119,9 +110,9 @@ window.addEventListener("DOMContentLoaded", async () => {
 });
 
 
-/* ============================================================
-   WALLET CONNECTION
-   ============================================================ */
+
+   //WALLET CONNECTION
+   
 async function connectWallet() {
   if (!window.ethereum) return showToast("Install MetaMask!", "error");
 
@@ -196,9 +187,7 @@ async function updateRole() {
 }
 
 
-/* ============================================================
-   TAB / NAVIGATION
-   ============================================================ */
+/*  TAB / NAVIGATION */
 function switchTab(name) {
   // Update nav links
   document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
@@ -225,9 +214,7 @@ function switchTab(name) {
 }
 
 
-/* ============================================================
-   VERIFY CERTIFICATE
-   ============================================================ */
+/* VERIFY CERTIFICATE*/
 async function verifyCertificate() {
   const certId = document.getElementById("verifyId").value.trim();
   if (!certId) return showToast("Enter a certificate ID.", "error");
@@ -276,9 +263,7 @@ async function verifyCertificate() {
 }
 
 
-/* ============================================================
-   PINATA UI HANDLERS
-   ============================================================ */
+/*PINATA UI HANDLERS */
 function updatePinataStatus() {
   const status = document.getElementById("pinataStatus");
   if (!status) return;
@@ -312,9 +297,7 @@ function savePinataJwtFromUI() {
 }
 
 
-/* ============================================================
-   ISSUE CERTIFICATE
-   ============================================================ */
+/*  ISSUE CERTIFICATE */
 async function issueCertificate() {
   if (!signer) return showToast("Connect your wallet first.", "error");
 
