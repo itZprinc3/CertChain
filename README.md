@@ -6,7 +6,7 @@ Built following the exact project structure and patterns from **Cyfrin Updraft �
 
 ---
 
-## Project Structure (matches foundry-fund-me-f23)
+## Project Structure 
 
 ```
 certificate-generation/
@@ -29,40 +29,6 @@ certificate-generation/
 └── .gitignore
 ```
 
----
-
-## Cyfrin Updraft Concepts Used
-
-### From Foundry Fundamentals
-
-| Concept | Where it's used |
-|---|---|
-| Custom errors (`ContractName__ErrorName`) | `CertificateManager.sol` — all reverts |
-| Variable prefixes (`i_` immutable, `s_` storage) | `CertificateManager.sol` — all state vars |
-| CEI pattern (Checks-Effects-Interactions) | `issueCertificate()` function |
-| `HelperConfig` for chain-agnostic deploys | `script/HelperConfig.s.sol` |
-| `DeployScript` with `vm.startBroadcast` | `script/DeployCertificateManager.s.sol` |
-| `Interactions.s.sol` for scripted calls | `script/Interactions.s.sol` |
-| `foundry-devops` to find deployed address | `Interactions.s.sol` — `DevOpsTools` |
-| Tests use deploy script in `setUp()` | Both test files |
-| `makeAddr()` for labeled test addresses | Unit tests |
-| `vm.prank()` / `vm.startPrank()` | Unit tests — access control |
-| `vm.expectRevert()` with custom errors | Unit tests — revert checks |
-| Test modifiers for setup helpers | `issuerAuthorized`, `certificateIssued` |
-| Unit vs Integration test split | `test/unit/` and `test/integration/` |
-| Makefile with all commands | Root `Makefile` |
-| NatSpec documentation | All public functions |
-
-### From Full-Stack Web3 Development
-
-| Concept | Where it's used |
-|---|---|
-| `ethers.BrowserProvider` (v6) | `frontend/index.html` |
-| `eth_requestAccounts` for wallet connect | `connectWallet()` |
-| `Contract` for read/write calls | All frontend interactions |
-| Event parsing from receipts | `issueCertificate()` — gets cert ID |
-| `accountsChanged` / `chainChanged` listeners | Wallet connection handler |
-| Chain ID detection for network config | `DOMContentLoaded` init |
 
 ---
 
