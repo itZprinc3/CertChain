@@ -11,18 +11,18 @@ Built following the exact project structure and patterns from **Cyfrin Updraft �
 ```
 certificate-generation/
 ├── src/
-│   └── CertificateManager.sol          # Main contract (like FundMe.sol)
+│   └── CertificateManager.sol          
 ├── script/
-│   ├── DeployCertificateManager.s.sol   # Deploy script (like DeployFundMe.s.sol)
-│   ├── HelperConfig.s.sol               # Chain config (like HelperConfig.s.sol)
-│   └── Interactions.s.sol               # Interact scripts (like Interactions.s.sol)
+│   ├── DeployCertificateManager.s.sol   
+│   ├── HelperConfig.s.sol               
+│   └── Interactions.s.sol               
 ├── test/
 │   ├── unit/
-│   │   └── CertificateManagerTest.t.sol # Unit tests (like FundMeTest.t.sol)
+│   │   └── CertificateManagerTest.t.sol 
 │   └── integration/
-│       └── InteractionsTest.t.sol       # Integration tests (like InteractionsTest.t.sol)
+│       └── InteractionsTest.t.sol       
 ├── frontend/
-│   └── index.html                       # Full-Stack Web3 frontend
+│   └── index.html                       
 ├── foundry.toml
 ├── Makefile
 ├── .env.example
