@@ -3,7 +3,6 @@ pragma solidity ^0.8.19;
 
 /**
  * @title CertificateManager
- * @author Built with concepts from Cyfrin Updraft (Foundry Fundamentals + Full-Stack Web3)
  * @notice A blockchain-based certificate issuance and verification system with IPFS metadata
  * @dev Follows Cyfrin Updraft conventions:
  *      - Custom errors: ContractName__ErrorName
